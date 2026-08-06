@@ -1,0 +1,38 @@
+@model IEnumerable<CafeSystem.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "User Management";
+    var userRoles = ViewBag.UserRoles as Dictionary<string, IList<string>>;
+}
+
+<h1>User Management</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Full Name</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.FullName</td>
+                <td>
+                    @if (userRoles != null && userRoles.ContainsKey(user.Id))
+                    {
+                        @string.Join(", ", userRoles[user.Id])
+                    }
+                </td>
+                <td>
+                    <a asp-action="ManageRoles" asp-route-userId="@user.Id" class="btn btn-sm btn-primary">Manage Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Dashboard" class="btn btn-secondary">Back to Dashboard</a>
