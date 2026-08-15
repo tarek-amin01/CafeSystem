@@ -1,0 +1,43 @@
+@model CafeSystem.Models.Cart
+
+@{
+    ViewData["Title"] = "Checkout";
+    decimal total = ViewBag.Total != null ? (decimal)ViewBag.Total : 0;
+}
+
+<div class="container mt-5">
+    <h1>Confirm Your Order</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Items</h4>
+            <table class="table">
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Quantity x @item.Product.Price.ToString("C")</td>
+                        <td>@((item.Quantity * item.Product.Price).ToString("C"))</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" class="text-end fw-bold">Total:</td>
+                    <td class="fw-bold">@total.ToString("C")</td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Payment</div>
+                <div class="card-body">
+                    <p>Total to Pay: <strong>@total.ToString("C")</strong></p>
+                    <p>Payment Method: Pay at Counter (Cash/Card)</p>
+                    
+                    <form asp-action="PlaceOrder" method="post">
+                        <button type="submit" class="btn btn-success w-100">Place Order</button>
+                    </form>
+                    <a asp-controller="Cart" asp-action="Index" class="btn btn-link mt-2 w-100">Back to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
