@@ -1,0 +1,114 @@
+﻿@model IEnumerable<CafeSystem.Models.Product>
+
+@{
+    ViewData["Title"] = "Menu";
+    ViewData["FullWidth"] = true; // Use full width layout
+    var categories = ViewBag.Categories as IEnumerable<CafeSystem.Models.Category>;
+    var currentCategory = ViewBag.CurrentCategory as int?;
+}
+
+<!-- CINEMATIC HERO SECTION -->
+<div class="hero-wrapper">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Crafted Coffee & Food Delights</h1>
+        <p class="hero-subtitle">Experience the perfect blend of ambiance and flavor.</p>
+        <a href="#menu-section" class="btn-premium">Explore Menu</a>
+    </div>
+</div>
+
+<!-- CATEGORY SECTION -->
+<div class="container category-section">
+    <h2 class="section-title">Our Collections</h2>
+    <div class="category-scroll-container">
+        <a asp-action="Index" class="category-pill @(currentCategory == null ? "active" : "")">
+            <span>✨</span> All
+        </a>
+        @if (categories != null)
+        {
+            foreach (var cat in categories)
+            {
+                <a asp-action="Index" asp-route-categoryId="@cat.Id" class="category-pill @(currentCategory == cat.Id ? "active" : "")">
+                   @* Simple logic to pick an emoji based on name, or just dot *@
+                   @if(cat.Name.ToLower().Contains("coffee")) { <span>☕</span> }
+                   else if(cat.Name.ToLower().Contains("bakery")) { <span>🥐</span> }
+                   else if(cat.Name.ToLower().Contains("burger")) { <span>🍔</span> }
+                   else { <span>🔘</span> }
+                   @cat.Name
+                </a>
+            }
+        }
+    </div>
+</div>
+
+<!-- MENU GRID SECTION -->
+<div id="menu-section" class="container py-5">
+    <h2 class="section-title">@(currentCategory == null ? "Full Menu" : "Selected Category")</h2>
+    
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-lg-3">
+                <div class="product-card-premium">
+                    <div class="product-img-wrapper">
+                         @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            if (item.ImageUrl.StartsWith("http"))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" loading="lazy" onerror="this.onerror=null;this.src='/images/category_coffee.png';">
+                            }
+                            else
+                            {
+                                <img src="~/images/products/@item.ImageUrl" alt="@item.Name" loading="lazy" onerror="this.onerror=null;this.src='/images/category_coffee.png';">
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/images/category_coffee.png" alt="Placeholder" loading="lazy">
+                        }
+                    </div>
+                    
+                    <div class="product-info">
+                        <h3 class="product-title">@item.Name</h3>
+                        <p class="product-desc">@item.Description</p>
+                        <span class="price-tag">@item.Price.ToString("C")</span>
+                        
+                        <!-- HIDDEN ACTIONS OVERLAY -->
+                        <div class="card-actions-overlay">
+                            <form asp-controller="Cart" asp-action="AddToCart" method="post" style="width:100%">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn-action-primary glow-effect">Add to Cart</button>
+                            </form>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-action-secondary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- SCRIPTS FOR ANIMATIONS -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Simple intersection observer for fade-in animations
+        const observerOptions = { threshold: 0.1 };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.product-card-premium').forEach((el, index) => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(30px)";
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`; // Staggered delay
+            observer.observe(el);
+        });
+    });
+</script>
