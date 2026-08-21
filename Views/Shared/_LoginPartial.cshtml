@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CafeSystem.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    var fullName = !string.IsNullOrEmpty(user?.FullName) ? user.FullName : User.Identity?.Name;
+    var profileImg = user?.ProfileImagePath;
+
+    <li class="nav-item d-flex align-items-center me-3">
+        <a class="nav-link text-dark d-flex align-items-center gap-2" asp-area="" asp-controller="Profile" asp-action="Index" title="My Profile">
+            @if (!string.IsNullOrEmpty(profileImg))
+            {
+                <img src="~/images/profiles/@profileImg" alt="Avatar" class="rounded-circle" style="width: 32px; height: 32px; object-fit: cover; border: 1px solid #ddd;">
+            }
+            else
+            {
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 14px;">
+                    @fullName?.Substring(0, 1).ToUpper()
+                </div>
+            }
+            <span class="fw-medium">Hello, @fullName!</span>
+        </a>
+    </li>
+    <li class="nav-item d-flex align-items-center">
+        <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+    </li>
+}
+</ul>
