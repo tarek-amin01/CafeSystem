@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cafe Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin/theme.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar d-flex flex-column flex-shrink-0 text-white" style="width: 280px; position: fixed; height: 100%; z-index: 1000;">
+            <div class="sidebar-logo d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <i class="fas fa-mug-hot fa-2x me-3"></i>
+                <h3 class="fs-4">Antigravity Cafe</h3>
+            </div>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a asp-controller="Admin" asp-action="Dashboard" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Dashboard" ? "active" : "")">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Categories" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Categories" ? "active" : "")">
+                        <i class="fas fa-tags"></i> Categories
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Products" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Products" ? "active" : "")">
+                        <i class="fas fa-utensils"></i> Products
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Orders" asp-action="Index" class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Orders" ? "active" : "")">
+                        <i class="fas fa-shopping-receipt"></i> Orders
+                    </a>
+                </li>
+                <li>
+                    <a asp-controller="Admin" asp-action="Users" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Users" ? "active" : "")">
+                        <i class="fas fa-users"></i> Staff & Users
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown p-3">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=C68E17&color=fff" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>@User.Identity?.Name</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Index">Back to Website</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="dropdown-item">Sign out</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="w-100" style="margin-left: 280px; background-color: var(--cafe-light); min-height: 100vh;">
+            <!-- Top Navbar -->
+            <nav class="top-navbar d-flex justify-content-between align-items-center">
+                <div class="input-group w-25">
+                    <span class="input-group-text bg-transparent border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0 ps-0" placeholder="Search orders, items...">
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" class="text-secondary position-relative">
+                        <i class="fas fa-bell fa-lg"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.5rem;">
+                            3
+                        </span>
+                    </a>
+                    <a href="#" class="text-secondary"><i class="fas fa-cog fa-lg"></i></a>
+                </div>
+            </nav>
+
+            <div class="p-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
