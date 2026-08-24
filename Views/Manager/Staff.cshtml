@@ -1,0 +1,28 @@
+@model IEnumerable<CafeSystem.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Staff List";
+}
+
+<h1>Staff List</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FullName</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-action="Dashboard" class="btn btn-secondary">Back to Dashboard</a>
